@@ -151,6 +151,42 @@ const Movie = mongoose.model("Movie", {
   },
 });
 
+// Theatre Model
+const Theatre = mongoose.model("Theatre", {
+  id: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  location: {
+    type: String,
+    required: true,
+  },
+  capacity: {
+    type: Number,
+    required: true,
+  },
+  movies: [
+    {
+      movieId: {
+        type: mongoose.Schema.Types.String,
+        ref: "Movie",
+        required: true,
+      },
+      availableTickets: {
+        type: Number,
+        required: true,
+        default: 0,
+      },
+    },
+  ],
+});
+
+
 //CRUD Person
 app.post("/addPerson", async (req, res) => {
   const person = new Person({
@@ -330,6 +366,93 @@ app.put("/updateMovie", async (req, res) => {
     });
   }
 });
+
+// CRUD for Theatres
+app.post("/addTheatre", async (req, res) => {
+  let theatres = await Theatre.find({});
+  let id;
+  if (theatres.length > 0) {
+    let last_theatre = theatres[theatres.length - 1];
+    id = parseInt(last_theatre.id) + 1;
+  } else {
+    id = 1;
+  }
+  const theatre = new Theatre({
+    id: id.toString(),
+    name: req.body.name,
+    location: req.body.location,
+    capacity: req.body.capacity,
+    movies: req.body.movies.map(movie => ({
+      movieId: movie.movieId,
+      availableTickets: movie.availableTickets,
+    })),
+  });
+  await theatre.save();
+  console.log("Theatre saved");
+  res.json({
+    success: true,
+    name: req.body.name,
+  });
+});
+
+app.post("/removeTheatre", async (req, res) => {
+  await Theatre.findOneAndDelete({ id: req.body.id });
+  console.log("Theatre removed");
+  res.json({
+    success: true,
+    name: req.body.name,
+  });
+});
+
+app.get("/allTheatres", async (req, res) => {
+  let theatres = await Theatre.find({});
+  console.log("All theatres fetched");
+  res.send(theatres);
+});
+
+// Update Theatre Endpoint
+app.put("/updateTheatre", async (req, res) => {
+  const theatreId = req.body.id;
+
+  const updatedTheatre = {
+    name: req.body.name,
+    location: req.body.location,
+    capacity: req.body.capacity,
+    movies: req.body.movies.map(movie => ({
+      movieId: movie.movieId,
+      availableTickets: movie.availableTickets,
+    })),
+  };
+
+  try {
+    const theatre = await Theatre.findOneAndUpdate(
+      { id: theatreId },
+      updatedTheatre,
+      {
+        new: true,
+      }
+    );
+
+    if (!theatre) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Theatre not found" });
+    }
+
+    console.log("Theatre updated");
+    res.json({
+      success: true,
+      theatre,
+    });
+  } catch (error) {
+    console.error("Error updating theatre:", error);
+    res.status(500).json({
+      success: false,
+      message: "An error occurred while updating the theatre",
+    });
+  }
+});
+
 
 app.listen(port, (error) => {
   if (!error) {
