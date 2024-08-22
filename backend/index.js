@@ -186,6 +186,58 @@ const Theatre = mongoose.model("Theatre", {
   ],
 });
 
+const Users = mongoose.model('Users', {
+  name: {
+    type: String,
+    required: true,
+    minlength: 1,
+    maxlength: 100,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  phone: {
+    type: String,
+    required: true,
+    unique: true,
+    minlength: 10,
+  },
+  password: {
+    type: String,
+    required: true,
+    minlength: 6,
+  },
+  myTickets: [{
+    theatreId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Theatre',
+      required: true,
+    },
+    movieId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Movie',
+      required: true,
+    },
+    price: {
+      type: Number,
+      required: true,
+    },
+    quantity: {
+      type: Number,
+      required: true,
+      default: 1,
+    }
+  }],
+  city: {
+    type: String,
+  },
+  state: {
+    type: String,
+  }
+});
+
 
 //CRUD Person
 app.post("/addPerson", async (req, res) => {
@@ -450,6 +502,77 @@ app.put("/updateTheatre", async (req, res) => {
       success: false,
       message: "An error occurred while updating the theatre",
     });
+  }
+});
+
+
+//Authentication login/signup
+const authenticateToken = (req, res, next) => {
+  const token = req.header('Authorization')?.split(' ')[1];
+  if (!token) return res.sendStatus(401);
+
+  jwt.verify(token, 'secret_bmt', (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
+};
+
+
+app.post('/signup', async (req, res) => {
+  let check = await Users.findOne({ email: req.body.email });
+  if (check) {
+    return res.status(400).json({ success: false, error: "Existing user found" });
+  }
+
+  const user = new Users({
+    name: req.body.name,
+    email: req.body.email,
+    phone: req.body.phone,
+    password: req.body.password,
+    city: req.body.city,
+    state: req.body.state,
+  });
+
+  try {
+    await user.save();
+    const data = {
+      user: {
+        id: user.id
+      }
+    };
+    const token = jwt.sign(data, 'secret_bmt');
+    const username = user.name;
+    const userId = user.id;
+    res.json({ success: true, token, username, userId, user });
+  } catch (error) {
+    res.status(500).json({ success: false, error: "Error saving user data" });
+  }
+});
+
+app.post('/login', async (req, res) => {
+  try {
+    let user = await Users.findOne({ email: req.body.email });
+    if (user) {
+      const passCompare = req.body.password === user.password;
+      if (passCompare) {
+        const data = {
+          user: {
+            id: user.id,
+          }
+        };
+        const token = jwt.sign(data, 'secret_bmt');
+        const username = user.name;
+        const userId = user.id;
+        res.json({ success: true, token, username, userId, user });
+      } else {
+        res.status(400).json({ success: false, error: "Wrong Password" });
+      }
+    } else {
+      res.status(400).json({ success: false, error: "Wrong Email" });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, error: "Error during login process" });
   }
 });
 
