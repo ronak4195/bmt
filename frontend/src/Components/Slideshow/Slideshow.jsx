@@ -17,10 +17,13 @@ const Slideshow = ({ movies }) => {
   return (
     <div className="slideshow">
       {movies.length > 0 && (
-        <div
-          className="slideshow-slide"
-          style={{ backgroundImage: `url(${movies[currentIndex].banner})` }}
-        />
+        <div className="slideshow-slide-div"> 
+          <img
+            className="slideshow-slide"
+            src={movies[currentIndex].banner}
+            alt="Movie Banner"
+          />
+        </div>
       )}
       <div className="slideshow-controls">
         <button onClick={() => setCurrentIndex((prevIndex) =>
