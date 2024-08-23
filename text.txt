@@ -1,0 +1,50 @@
+The requirements are as follows.
+Movie Booking WebApp
+
+Online Booking System
+Admin Dashboard
+Features
+​​​​​​
+Movies
+
+Admin must be able to Add / Update / Delete Movies.
+Customers can only see Movies
+Each Movie contains data like Title, Image, Language, Genre, Director, Trailer, Description, Duration, Start Date, End Date etc.
+Theatres
+
+Admin must be able to Add / Update / Delete Movies.
+Customers can only see Theatres
+Each Theatre contains data like Name, City, TicketPrice, Seats, Image, etc.
+Showtimes
+
+Admin must be able to Add / Update / Delete Showtimes
+Customers can only see Showtimes
+Each Showtime contains data like TicketPrice, StartDate, EndDate, MovieID, TheatreID, etc
+Reservations
+
+Admin must be able to Add / Update / Delete Reservations.
+Customers can see, Add, and Cancel Reservations. No Editing.
+Each Reservation contains data like Data, StartAt, Seats, OrderID, TicketPrice, Total, MovieID, TheatreID, Name, Phone, etc.
+Users
+
+Admin must be able to Add / Update / Delete Users.
+Customers can Add / Update / Delete only their User profile.
+Each User contains data like Name, Email, Password, Role (Admin, Customer, SuperAdmin), Phone, OrderID etc
+Assumptions
+
+​​​​​​​Movies are those which are released by the Indian Film Industry.
+Theatres are physical locations where movies are shown to the general public.
+Showtimes are range of Dates on which a particular movie is active in a particular Theatre.
+Reservations are bookings made by Customers to book a seat in a Theatre.
+Each Theatre can have random number of Seats available.
+Option to edit seats such that any number of rows and any number of columns can be accommodated. (Need not be a rectangular seating arrangement)
+Seats are named from A to Z as Rows and 1 to 100 as Columns.
+Constraints.
+
+Maximum Rows: 26
+Maximum Columns: 100.
+However, 1st Row could have 15 Seats, 2nd Row could have 10 seats, 3rd Row could have 5 seats etc (Variable number of Seats).
+An Option to Call and WhatsApp support for Customers to reach out.
+Use Emails for Authentication and sending out Booked tickets.
+Use a Dummy Payment Gateway to collect Payment details.
+Do not collect real Payments.
