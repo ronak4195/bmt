@@ -1,0 +1,37 @@
+/* Payment Form Container */
+.payment-form-container {
+    max-width: 500px; /* Set a max width for the form */
+    margin: 0 auto; /* Center the form horizontally */
+    padding: 20px; /* Add some padding */
+    background-color: #f9f9f9; /* Light background for better readability */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Card Element Container */
+.card-element-container {
+    margin-bottom: 20px; /* Space below the card element */
+}
+
+/* Submit Button */
+.payment-form-button {
+    background-color: #007bff; /* Button color */
+    color: white; /* Text color */
+    border: none; /* Remove default border */
+    padding: 10px 20px; /* Padding for button */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 1em; /* Font size */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth background color transition */
+}
+
+/* Button Hover State */
+.payment-form-button:hover {
+    background-color: #0056b3; /* Darker color on hover */
+}
+
+/* Error Message */
+.error-message {
+    color: red; /* Red color for error messages */
+    margin-top: 10px; /* Space above error message */
+}

@@ -1,0 +1,11 @@
+/* App Container */
+.app-container {
+  padding-top: 60px; /* Adjust this value based on the height of your navbar */
+}
+
+/* Main Content */
+.main-content {
+  margin: 0 auto;
+  max-width: 1200px; /* Adjust as needed */
+  padding: 20px;
+}
