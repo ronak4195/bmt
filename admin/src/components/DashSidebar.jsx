@@ -10,7 +10,7 @@ function DashSidebar() {
     <Sidebar aria-label="Sidebar with multi-level dropdown example">
       <Sidebar.Items>
         <Sidebar.ItemGroup>
-          <Sidebar.Item icon={HiChartPie} onClick={() => navigate('/dashboard')}>
+          <Sidebar.Item icon={HiChartPie} onClick={() => navigate('/')}>
             Dashboard
           </Sidebar.Item>
           <Sidebar.Item icon={HiShoppingBag} onClick={() => navigate('/create-movies')}>

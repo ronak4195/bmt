@@ -1,5 +1,5 @@
 import React from 'react'
-import DashSidebar from '../../Components/DashSidebar'
+import DashSidebar from '../components/DashSidebar'
 
 
 function DashBoard() {

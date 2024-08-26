@@ -6,7 +6,9 @@ import cors from "cors";
 import multer from "multer";
 import path from "path";
 import jwt from "jsonwebtoken";
+import Stripe from 'stripe';
 
+const stripe = new Stripe('sk_test_51PrHxH05vtujCDFKA7iJT8rKjaqKkm45wmvbClG6Wi9vh3oaHM0hXoiq3LIDAmkrIMo7PO9Vc5kpSVmNqidBLH3o00vQZzDdwq'); // Replace with your Stripe secret key
 const app = express();
 const port = process.env.PORT || 4000;
 
@@ -573,6 +575,44 @@ app.post('/login', async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ success: false, error: "Error during login process" });
+  }
+});
+
+
+app.post('/create-payment-intent', async (req, res) => {
+  const { paymentMethodId, amount } = req.body;
+
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: amount , 
+      currency: 'inr',
+      payment_method: paymentMethodId,
+      confirm: true,
+    });
+
+    res.send({ success: true });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
+  }
+});
+
+// Handle location data from frontend
+app.post('/api/location', async (req, res) => {
+  const { latitude, longitude } = req.body;
+
+  try {
+    // Call an external API to get location details (e.g., OpenCage, Geocoding API)
+    const response = await axios.get(`https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=YOUR_API_KEY`);
+
+    const locationData = response.data.results[0].components;
+    const city = locationData.city || locationData.town || 'Unknown';
+    const country = locationData.country || 'Unknown';
+
+    // Send response back to frontend
+    res.json({ city, country });
+  } catch (error) {
+    console.error('Error fetching location data:', error);
+    res.status(500).json({ error: 'Failed to fetch location data' });
   }
 });
 
